@@ -465,19 +465,21 @@ if __name__ == '__main__':
         sys.exit(1)
 
     # Ensuring the correct parameters are set when performing SCCM Client Push attack
-    if options.sccm_clientpush is True and not options.target.rstrip('/').endswith("/ccm_system_windowsauth/request"):
-        logging.error("When performing SCCM Client Push attack, the Management Point authenticated device registration endpoint should be provided as target")
-        logging.error(f"For instance: {urlparse(options.target).scheme}://{urlparse(options.target).netloc}/ccm_system_windowsauth/request")
-        sys.exit(1)
-    elif options.sccm_clientpush_devicename == None:
-        logging.error(f"Error please specify a name for the device to be registered.")
-        sys.exit(1)
-    elif options.sccm_clientpush_site == None:
-        logging.error(f"Error please specify a valid SCCM site.")
-        sys.exit(1)
-    elif options.sccm_clientpush_ip == None:
-        logging.error(f"Error please specify an IP address to which Client Push Installation should be invoked to.")
-        sys.exit(1)
+    # Ensuring the correct parameters are set when performing SCCM Client Push attack
+    if options.sccm_clientpush:
+        if not options.target or not options.target.rstrip('/').endswith("/ccm_system_windowsauth/request"):
+            logging.error("When performing SCCM Client Push attack, the Management Point authenticated device registration endpoint should be provided as target")
+            logging.error(f"For instance: {urlparse(options.target).scheme}://{urlparse(options.target).netloc}/ccm_system_windowsauth/request")
+            sys.exit(1)
+        elif not options.sccm_clientpush_devicename:
+            logging.error(f"Error please specify a name for the device to be registered.")
+            sys.exit(1)
+        elif not options.sccm_clientpush_site:
+            logging.error(f"Error please specify a valid SCCM site.")
+            sys.exit(1)
+        elif not options.sccm_clientpush_ip:
+            logging.error(f"Error please specify an IP address to which Client Push Installation should be invoked to.")
+            sys.exit(1)
 
     # Init the example's logger theme
     logger.init(options.ts, options.debug)
